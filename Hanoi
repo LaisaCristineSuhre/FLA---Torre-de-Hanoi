@@ -2,7 +2,7 @@ import sys #Para poder sair do jogo depois.
 
 cont=0  #Contador de quantas jogadas foram.
 
-t1 = [3, 2, 1]  #As torres.
+t1 = []  #As torres.
 t2 = []
 t3 = []
 
@@ -12,105 +12,66 @@ def imprime_tabuleiro():  #Função para imprimir o tabuleiro.
     print("2=", t2)
     print("3=", t3)
 
+def recupera_torre(num):  # Função para, caso o usuário escolha a torre 1, retornar a torre t1. Funciona igual para as outras.
+    if num == '1':
+        return t1
+    if num == '2':
+        return t2
+    if num == '3':
+        return t3
+    
+
+def valida_jogada(origem, destino):  # validar se esse movimento pode ser feito
+    if origem == destino:
+        print("É a mesma torre.")
+        return False
+
+    torre_origem = recupera_torre(origem)
+    torre_destino = recupera_torre(destino)
+    
+
+    if len(torre_origem) == 0:
+        print("Não tem nada na torre.")
+        return False
+
+    if len(torre_destino) > 0:
+        if torre_origem[-1] > torre_destino[-1]:
+            print("Disco no topo da torre de origem eh maior que o disco no topo da torre de destino.")
+            return False
+    
+    
+    return True
+
+def realiza_movimento(origem, destino):  # irá realizar o movimento
+
+    torre_origem = recupera_torre(origem)
+    torre_destino = recupera_torre(destino)
+
+    torre_destino.append(torre_origem.pop())
+
 
 imprime_tabuleiro()
 
 jogo=True
 
+num_pecas = int(input("Digite a quantidade de peças que você quer: "))
+t1 = list(range(num_pecas, 0, -1))
+imprime_tabuleiro()
 while jogo:
     n1=input("Escolha qual que você quer: ")  #Pede de qual torre o usuário quer remover uma peça.
-    
-    if n1=="1":
-        if t1==[]:
-            print("Não é possível realizar esta jogada. Tente outra vez.")
-            continue #Caso a torre esteja vazia, vai pedir para escolher outra.
-        if n1 == '1':
-            v = t1.pop()
-        if n1 == '2':
-            v = t2.pop()
-        if n1 == '3':
-            v = t3.pop()  #Para retirar o último elemento da torre escolhida.
-        n2=input("Escolha para onde quer leva-lo: ")  #Para o usuário escolher a torre de destino.
-        if n2=='1':
-##            if (len(t1))>(len(t1)):
-##                print('Não é possível realizar essa jogada. Tente outra vez.')
-##                continue
-            t1.append(v)
-        elif n2 == '2':
-##            if (len(t2))>(len(t1)):
-##                print('Não é possível realizar essa jogada. Tente outra vez.')
-##                continue
-            t2.append(v)
-        elif n2 == '3':
-##            if (len(t3))>(len(t1)):
-##                print('Não é possível realizar essa jogada. Tente outra vez.')
-##                continue
-            t3.append(v)  #Para adicionar o último elemento da torre de origem escolhida na torre de destino.
-        imprime_tabuleiro()
-        cont+=1  #Irá imprimir as torres modificadas e adicionar 1 a mais na contagem de jogadas.
+    n2=input("Escolha para onde quer leva-lo: ")  #Para o usuário escolher a torre de destino.
+    if valida_jogada(n1, n2):
+        realiza_movimento(n1, n2)  #Chama as funções para validar a jogada e para realizar o movimento.
         
-    if n1=="2":
-        if t2==[]:
-            print("Não é possível realizar esta jogada. Tente outra vez.")
-            continue
-        if n1 == '1':
-            v = t1.pop()
-        if n1 == '2':
-            v = t2.pop()
-        if n1 == '3':
-            v = t3.pop()
-        n2=input("Escolha para onde quer leva-lo: ")
-        if n2=='1':
-##            if (len(t1))>(len(t2)):
-##                print('Não é possível realizar essa jogada. Tente outra vez.')
-##                continue
-            t1.append(v)
-        elif n2 == '2':
-##            if (len(t2))>(len(t2)):
-##                print('Não é possível realizar essa jogada. Tente outra vez.')
-##                continue
-            t2.append(v)
-        elif n2 == '3':
-##            if (len(t3))>(len(t2)):
-##                print('Não é possível realizar essa jogada. Tente outra vez.')
-##                continue
-            t3.append(v)
-        imprime_tabuleiro()
-        cont+=1
-        
-    if n1=="3":
-        if t3==[]:
-            print("Não é possível realizar esta jogada. Tente outra vez.")
-            continue
-        if n1 == '1':
-            v = t1.pop()
-        if n1 == '2':
-            v = t2.pop()
-        if n1 == '3':
-            v = t3.pop()
-        n2=input("Escolha para onde quer leva-lo: ")
-        if n2=='1':
-##            if (len(t1))>(len(t3)):
-##                print('Não é possível realizar essa jogada. Tente outra vez.')
-##                continue            
-            t1.append(v)
-        elif n2 == '2':
-##            if (len(t2))>(len(t3)):
-##                print('Não é possível realizar essa jogada. Tente outra vez.')
-##                continue
-            t2.append(v)
-        elif n2 == '3':
-##            if (len(t3))>(len(t3)):
-##                print('Não é possível realizar essa jogada. Tente outra vez.')
-##                continue
-            t3.append(v)
+
         imprime_tabuleiro()
         cont+=1  #Irá se repetir praticamente a mesma coisa até aqui, com a diferença da torre de origem.
 
-    if t3==[3, 2, 1]:
+    if t3==list(range(num_pecas, 0, -1)):
         print('Parabéns! Você conseguiu!')
         print('Total de movimentos:', cont)
         sys.exit()  #Se a última torre seja igual a primeira, significa que o usuário cumpriu seu objetivo no jogo e o jogo terminou, e então sairá do programa.
 
         
     print('Movimentos =', cont)  #Mostra a quantidade de movimentos já realizados.
+    print("")
